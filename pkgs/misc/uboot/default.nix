@@ -52,7 +52,7 @@ let
       # Make U-Boot forward some important settings from the firmware-provided FDT. Fixes booting on BCM2711C0 boards.
       # See also: https://github.com/NixOS/nixpkgs/issues/135828
       # Source: https://patchwork.ozlabs.org/project/uboot/patch/20210822143656.289891-1-sjoerd@collabora.com/
-      ./0001-rpi-Copy-properties-from-firmware-dtb-to-the-loaded-.patch
+      # ./0001-rpi-Copy-properties-from-firmware-dtb-to-the-loaded-.patch
     ] ++ extraPatches;
 
     postPatch = ''
@@ -67,9 +67,12 @@ let
       dtc
       flex
       openssl
+      libuuid
+      gnutls
       (buildPackages.python3.withPackages (p: [
         p.libfdt
         p.setuptools # for pkg_resources
+        p.pyelftools
       ]))
       swig
       which # for scripts/dtc-version.sh
@@ -87,7 +90,7 @@ let
     enableParallelBuilding = true;
 
     makeFlags = [
-      "DTC=dtc"
+      "DTC=${buildPackages.dtc}/bin/dtc"
       "CROSS_COMPILE=${stdenv.cc.targetPrefix}"
     ] ++ extraMakeFlags;
 
@@ -567,4 +570,28 @@ in {
     BL31 = "${armTrustedFirmwareRK3399}/bl31.elf";
     filesToInstall = [ "u-boot.itb" "idbloader.img"];
   };
+
+  ubootNanoPiR5S =
+    let rkbin = fetchFromGitHub {
+          owner = "rockchip-linux";
+          repo = "rkbin";
+          rev = "b28842d54cade25b5670c450f32146a734fd8aa6";
+          hash = "sha256-6UUfqLomUOWkcrCGBo9CbvYoZsR7oNeBGROBGMVGMW8=";
+        };
+    in buildUBoot {
+      src = fetchFromGitHub {
+        owner = "u-boot";
+        repo = "u-boot";
+        # rev = "f8a2d1c108da37fd5202d717c3e428e3dfc12f01";
+        # hash = "sha256-DqKmYqUyvyiWJIuwsoj7pJ38gPSm7O2DhQD0LUF9udY=";
+        rev = "9787da0d32c2d58bae790a16ded0fe0c150c3280";
+        hash = "sha256-oTDTx6pMnG65g0BHSTGh5/svlvIeC+rPhX9D70oihVw=";
+      };
+      version = "2023.69-git";
+      defconfig = "nanopi-r5s-rk3568_defconfig";
+      extraMeta.platforms = ["aarch64-linux"];
+      BL31="${rkbin}/bin/rk35/rk3568_bl31_v1.43.elf";
+      ROCKCHIP_TPL="${rkbin}/bin/rk35/rk3568_ddr_1560MHz_v1.18.bin";
+      filesToInstall = [ "u-boot.itb" "idbloader.img"];
+    };
 }

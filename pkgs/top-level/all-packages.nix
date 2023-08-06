@@ -27748,6 +27748,7 @@ with pkgs;
     ubootJetsonTK1
     ubootLibreTechCC
     ubootNanoPCT4
+    ubootNanoPiR5S
     ubootNovena
     ubootOdroidC2
     ubootOdroidXU3
