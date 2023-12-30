@@ -783,6 +783,15 @@ let
     lispLibs = oa.lispLibs ++ [ self.sb-cga ];
   });
 
+  cl-autowrap = (build-asdf-system {
+    inherit (super.cl-autowrap) pname version src lispLibs;
+    asds = [ "cl-autowrap" "cl-plus-c" ];
+
+    systems = [ "cl-autowrap" "cl-autowrap/libffi" "cl-plus-c" ];
+    nativeBuildInputs = [ pkgs.c2ffi ];
+    nativeLibs = [ pkgs.libffi ];
+  });
+
   });
 
 in packages
