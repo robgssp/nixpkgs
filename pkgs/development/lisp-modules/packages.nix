@@ -884,6 +884,25 @@ let
     };
   };
 
+  # The version in quicklisp is broken as of 2024-07-09. Should be fixed in the next quicklisp release.
+  stmx = super.stmx.overrideLispAttrs (old: rec {
+    version = "stable-95f7dea8-git";
+    src = pkgs.fetchFromGitHub {
+      owner = "cosmos72";
+      repo = "stmx";
+      rev = "95f7dea8e1e58dee59e14a1deb148908d920839f";
+      hash = "sha256-yUJS6kyJ6+E3UZa48QtjEg4nJkzymaNMUUorlo4vAuM=";
+    };
+  });
+
+  cl-autowrap = super.cl-autowrap.overrideLispAttrs (old: rec {
+    src = pkgs.fetchFromGitHub {
+      owner = "rpav";
+      repo = "cl-autowrap";
+      rev = "4bba9e37b59cd191dea150a89aef7245a40b1c9d";
+      hash = "sha256-wNPHsi7R9uzI6K3/NXClRu+Kej23C+JB7LClyrOH2+k=";
+    };
+  });
   });
 
 in packages
