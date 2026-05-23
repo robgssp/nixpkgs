@@ -1,4 +1,7 @@
 ;; -*- lexical-binding: t; -*-
+(message "Loading site-start.el!")
+(setq site-start-time (float-time))
+
 (defun nix--profile-paths ()
   "Return a list of all paths in NIX_PROFILES.
 The list is ordered from more-specific (the user profile) to the
@@ -98,3 +101,5 @@ least specific (the system profile)"
         emacs-version))
       (src (file-name-as-directory "src")))
   (setq find-function-C-source-directory (concat emacs version src)))
+
+(message "site-start.el took %fs" (- (float-time) site-start-time))
