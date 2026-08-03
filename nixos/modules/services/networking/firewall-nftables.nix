@@ -198,8 +198,6 @@ in
 
           icmpv6 type != { router-renumbering, 139 } accept comment "Accept all ICMPv6 messages except renumbering and node information queries (type 139).  See RFC 4890, section 4.3."
 
-          ct status dnat accept comment "allow port forward"
-
           ${cfg.extraForwardRules}
 
         }
